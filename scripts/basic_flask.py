@@ -7,8 +7,13 @@ from PIL import Image
 import io
 import numpy as np
 from torchvision import models
+import json
 
 app = Flask(__name__)
+
+model = models.densenet121(pretrained=True)
+model.eval()
+imagenet_class_idx = json.load(open('config/imagenet_class_index.json'))
 
 @app.route('/')
 def hello():
@@ -21,6 +26,8 @@ def predict():
 
 def transform_image(image_bytes):
     my_transforms = A.Compose([
+        A.Resize(255, 255),
+        A.CenterCrop(224, 224),
         A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         ToTensorV2()
     ])
@@ -28,7 +35,13 @@ def transform_image(image_bytes):
     img_transformed = my_transforms(image=image)
     return img_transformed['image'].unsqueeze(0)
 
+def get_prediction(image_bytes):
+    tensor = transform_image(image_bytes=image_bytes)
+    outputs = model.forward(tensor)
+    _, y_hat = outputs.max(1)
+    predicted_idx = str(y_hat.item())
+    return imagenet_class_idx[predicted_idx]
+
 with open("../data/birdies_fuji_crops/crops/positive/DSCF7099_0.png", 'rb') as f:
     image_bytes = f.read()
-    tensor = transform_image(image_bytes=image_bytes)
-    print(tensor)
+    print(get_prediction(image_bytes=image_bytes))
