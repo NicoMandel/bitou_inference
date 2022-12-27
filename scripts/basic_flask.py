@@ -1,6 +1,6 @@
 # Following [this tutorial](https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html)
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
@@ -19,9 +19,13 @@ imagenet_class_idx = json.load(open('config/imagenet_class_index.json'))
 def hello():
     return "Hello World!"
 
-@app.route('/predict')
+@app.route('/predict', methods=['POST'])
 def predict():
-    return jsonify({'class_id' : 'IMAGE_NET_XXX', 'class_name' : 'Cat'})
+    if request.method == 'POST':
+        file = request.files['file']
+        img_bytes = file.read()
+        class_id, class_name = get_prediction(image_bytes=img_bytes)
+        return jsonify({'class_id' : class_id, 'class_name' : class_name})
 
 
 def transform_image(image_bytes):
