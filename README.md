@@ -7,3 +7,4 @@ Inference Repository for the bitou model - deployment
 2. [ ] This one from an AI Engineer on [Medium](https://medium.com/nlplanet/deploy-a-pytorch-model-with-flask-on-gcp-vertex-ai-8e81f25e605f)
 3. [ ] This one from another engineer, which also includse docker [on his website](https://www.paepper.com/blog/posts/pytorch-gpu-inference-with-docker/)
 4. [ ] This one from some guy who already wrote a git for this stuff [on GitHub](https://github.com/imadtoubal/Pytorch-Flask-Starter)
+5. [ ] This better Github Version of a dockerfile on [GitHub](https://github.com/nikitajz/pytorch-flask-inference)
