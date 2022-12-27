@@ -10,23 +10,9 @@ from torchvision import models
 import json
 
 app = Flask(__name__)
-
+imagenet_class_idx = json.load(open('config/imagenet_class_index.json'))
 model = models.densenet121(pretrained=True)
 model.eval()
-imagenet_class_idx = json.load(open('config/imagenet_class_index.json'))
-
-@app.route('/')
-def hello():
-    return "Hello World!"
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    if request.method == 'POST':
-        file = request.files['file']
-        img_bytes = file.read()
-        class_id, class_name = get_prediction(image_bytes=img_bytes)
-        return jsonify({'class_id' : class_id, 'class_name' : class_name})
-
 
 def transform_image(image_bytes):
     my_transforms = A.Compose([
@@ -39,6 +25,7 @@ def transform_image(image_bytes):
     img_transformed = my_transforms(image=image)
     return img_transformed['image'].unsqueeze(0)
 
+
 def get_prediction(image_bytes):
     tensor = transform_image(image_bytes=image_bytes)
     outputs = model.forward(tensor)
@@ -46,6 +33,13 @@ def get_prediction(image_bytes):
     predicted_idx = str(y_hat.item())
     return imagenet_class_idx[predicted_idx]
 
-with open("../data/birdies_fuji_crops/crops/positive/DSCF7099_0.png", 'rb') as f:
-    image_bytes = f.read()
-    print(get_prediction(image_bytes=image_bytes))
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.method == 'POST':
+        file = request.files['file']
+        img_bytes = file.read()
+        class_id, class_name = get_prediction(image_bytes=img_bytes)
+        return jsonify({'class_id' : class_id, 'class_name' : class_name})
+
+if __name__=="__main__":
+    app.run()
