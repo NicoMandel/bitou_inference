@@ -1,6 +1,7 @@
 # Following [this tutorial](https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html)
 
 from flask import Flask, jsonify, request
+# from os import environ
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
@@ -42,4 +43,6 @@ def predict():
         return jsonify({'class_id' : class_id, 'class_name' : class_name})
 
 if __name__=="__main__":
-    app.run()
+    app.debug = True
+    port = 80
+    app.run(host='0.0.0.0', port=port, debug=True)

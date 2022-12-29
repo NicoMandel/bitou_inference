@@ -2,6 +2,15 @@
 Inference Repository for the bitou model - deployment
 
 
+## To run the current status
+1. run in the terminal `docker run -p 5000:80 pytorchflask` which maps the port 80 in the container to 5000 on the host
+2. cd into the directory with the image files: `cd ~/src/csu/data/birdies_fuji_crops/crops/positive`
+3. `conda activate csuinf`
+4. `python`
+    1. `import requests`
+    2. post request: `resp = requests.post("http://localhost:5000/predict", files={"file":open('DSCF7210_3.png', 'rb')})`
+    3. jsonify response: `resp.json()`
+
 ## Tutorials
 1. [ ] This basic one from the pytorch development team, [on their website](https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html)
 2. [ ] This one from an AI Engineer on [Medium](https://medium.com/nlplanet/deploy-a-pytorch-model-with-flask-on-gcp-vertex-ai-8e81f25e605f)

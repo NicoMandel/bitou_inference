@@ -17,9 +17,10 @@ RUN pip install -r requirements.txt
 
 # Activating the environment
 # RUN conda activate csuinf
-RUN echo "Making sure flask is installed:"
-RUN python -c "import flask"
+# RUN echo "Making sure flask is installed:"
+# RUN python -c "import flask"
 
 # If things worked:
-COPY scripts/run.py .
-ENTRYPOINT [ "python", "run.py" ]
+COPY . .
+
+ENTRYPOINT [ "python", "scripts/basic_flask.py" ]
