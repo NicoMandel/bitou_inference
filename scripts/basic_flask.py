@@ -42,7 +42,11 @@ def predict():
         class_id, class_name = get_prediction(image_bytes=img_bytes)
         return jsonify({'class_id' : class_id, 'class_name' : class_name})
 
+@app.route("/")
+def hello():
+    return "Hello World!"
+
 if __name__=="__main__":
     app.debug = True
-    port = 80
+    port = 5000
     app.run(host='0.0.0.0', port=port, debug=True)

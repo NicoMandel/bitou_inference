@@ -23,4 +23,7 @@ RUN pip install -r requirements.txt
 # If things worked:
 COPY . .
 
+# only makes it accessible internally - does not publish it, see [here](https://www.mend.io/free-developer-tools/blog/docker-expose-port/)
+EXPOSE 5000
+
 ENTRYPOINT [ "python", "scripts/basic_flask.py" ]
