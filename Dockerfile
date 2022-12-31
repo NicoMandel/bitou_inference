@@ -11,9 +11,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN python -m pip install --upgrade pip
 RUN pip install --upgrade setuptools wheel
-RUN pip install numpy mkl-fft opencv-python==4.6.0.66
+# RUN pip install numpy mkl-fft opencv-python==4.6.0.66
 # mkl-fft opencv-python==4.6.0
-RUN pip install -r requirements.txt
+# RUN pip install -r requirements.txt
+RUN pip install flask
 
 # Activating the environment
 # RUN conda activate csuinf
@@ -26,4 +27,4 @@ COPY . .
 # only makes it accessible internally - does not publish it, see [here](https://www.mend.io/free-developer-tools/blog/docker-expose-port/)
 EXPOSE 5000
 
-ENTRYPOINT [ "python", "scripts/basic_flask.py" ]
+ENTRYPOINT [ "python", "scripts/run.py" ]

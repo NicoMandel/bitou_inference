@@ -1,8 +1,10 @@
-import cv2
-import flask
-import pytorch_lightning as pl
-import torch 
-import numpy as np
-import albumentations as a
+from flask import Flask
+app = Flask(__name__)
 
-print("It worked!")
+@app.route('/')
+def hello():
+	return "Hello World!"
+
+if __name__ == '__main__':
+    port = 5000
+    app.run(host='0.0.0.0', port=port)

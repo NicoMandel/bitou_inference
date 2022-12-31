@@ -1,5 +1,7 @@
 services:
   web:
     build: .
+    # image: pytorchflask
+    container_name: webapp
     ports: 
       - "8000:5000"
