@@ -8,7 +8,7 @@ WORKDIR /app
 
 # RUN apt-get update && apt-get install -y apt-utils
 # Creating the environment
-COPY requirements.txt .
+COPY . .
 RUN python -m pip install --upgrade pip
 RUN pip install --upgrade setuptools wheel
 # RUN pip install numpy mkl-fft opencv-python==4.6.0.66
@@ -22,9 +22,9 @@ RUN pip install flask
 # RUN python -c "import flask"
 
 # If things worked:
-COPY . .
+# COPY . .
 
 # only makes it accessible internally - does not publish it, see [here](https://www.mend.io/free-developer-tools/blog/docker-expose-port/)
 EXPOSE 5000
 
-ENTRYPOINT [ "python", "scripts/run.py" ]
+ENTRYPOINT [ "python", "scripts/plot_image.py" ]
