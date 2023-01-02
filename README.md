@@ -23,3 +23,4 @@ Inference Repository for the bitou model - deployment
 6. [x] Something about Docker Port mapping and exposing [here](https://www.mend.io/free-developer-tools/blog/docker-expose-port/)
 7. [ ] This one about uploading images with flask to a website from some guy on [Youtube](https://www.youtube.com/watch?v=dP-2NVUgh50)
 8. [ ] Image Upload and display without saving to storage - on [GitHub](https://github.com/geeksloth/flaskimio)
+9. [ ] Image upload and display with saving to storage - a [blog post](https://roytuts.com/upload-and-display-image-using-python-flask/)
