@@ -21,3 +21,5 @@ Inference Repository for the bitou model - deployment
 4. [ ] This one from some guy who already wrote a git for this stuff [on GitHub](https://github.com/imadtoubal/Pytorch-Flask-Starter)
 5. [ ] This better Github Version of a dockerfile on [GitHub](https://github.com/nikitajz/pytorch-flask-inference)
 6. [x] Something about Docker Port mapping and exposing [here](https://www.mend.io/free-developer-tools/blog/docker-expose-port/)
+7. [ ] This one about uploading images with flask to a website from some guy on [Youtube](https://www.youtube.com/watch?v=dP-2NVUgh50)
+8. [ ] Image Upload and display without saving to storage - on [GitHub](https://github.com/geeksloth/flaskimio)
