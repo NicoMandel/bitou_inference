@@ -27,4 +27,4 @@ RUN pip install flask
 # only makes it accessible internally - does not publish it, see [here](https://www.mend.io/free-developer-tools/blog/docker-expose-port/)
 EXPOSE 5000
 
-ENTRYPOINT [ "python", "scripts/plot_image.py" ]
+ENTRYPOINT [ "python", "upload_img.py" ]

@@ -24,3 +24,6 @@ Inference Repository for the bitou model - deployment
 7. [ ] This one about uploading images with flask to a website from some guy on [Youtube](https://www.youtube.com/watch?v=dP-2NVUgh50)
 8. [ ] Image Upload and display without saving to storage - on [GitHub](https://github.com/geeksloth/flaskimio)
 9. [ ] Image upload and display with saving to storage - a [blog post](https://roytuts.com/upload-and-display-image-using-python-flask/)
+10. [x] Debugging flask and python [with vscode](https://code.visualstudio.com/docs/python/tutorial-flask)
+11. [x] Displaying an image in flask with python [on Stackoverflow](https://stackoverflow.com/questions/46785507/python-flask-display-image-on-a-html-page)
+12. [ ] Debugging docker and flask inside vscode in [this medium post](https://medium.com/@lassebenninga/how-to-debug-flask-running-in-docker-compose-in-vs-code-ef37f0f516ee)
