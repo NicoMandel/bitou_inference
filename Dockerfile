@@ -14,7 +14,11 @@ RUN pip install --upgrade setuptools wheel
 RUN pip install numpy mkl-fft opencv-python==4.6.0.66
 # mkl-fft opencv-python==4.6.0
 RUN pip install -r requirements.txt
-# COPY . .
+
+# local installs
+COPY 'setup.py' .
+COPY src src/
+RUN pip install -e .
 # RUN pip install flask
 
 FROM base as dev
