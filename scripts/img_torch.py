@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 
 
 fdir=os.path.dirname(os.path.abspath(__file__))
-template_dir = os.path.abspath(os.path.join(fdir, '..', 'templates'))
+template_dir = os.path.abspath(os.path.join(fdir, 'templates'))
 
 allowed_exts = {'jpg', 'jpeg','png','JPG','JPEG','PNG'}
 app = Flask(__name__, template_folder=template_dir)
@@ -57,8 +57,8 @@ def predict():
             return redirect(request.url)
         if file and check_allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print("filename")
-            # TODO: here is where it changes
+            print(filename)
+            # ! there seems to be a mistake here with file hanndling
             img = Image.open(file.stream)
             with BytesIO() as buf:
                 img.save(buf, 'jpeg')
