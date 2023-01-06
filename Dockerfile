@@ -17,7 +17,10 @@ RUN pip install -r requirements.txt
 
 # local installs
 COPY 'setup.py' .
-COPY src src/
+ADD https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/model.py src/csuinf/model.py
+ADD https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/utils.py src/csuinf/utils.py
+ADD https://cloudstor.aarnet.edu.au/plus/s/dojRidMLnrHK8nV/download best.pt
+# COPY src src/
 RUN pip install -e .
 # RUN pip install flask
 
@@ -25,7 +28,8 @@ FROM base as dev
 RUN pip install debugpy
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-
+# COPY testimports.py .
+# CMD [ "python", "testimports.py" ]
 
 # Activating the environment
 # RUN conda activate csuinf
