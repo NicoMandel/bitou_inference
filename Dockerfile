@@ -25,6 +25,7 @@ COPY . .
 ADD https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/model.py src/csuinf/model.py
 ADD https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/utils.py src/csuinf/utils.py
 ADD https://cloudstor.aarnet.edu.au/plus/s/dojRidMLnrHK8nV/download best.pt
+ADD https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/config/colour_code.json config/colour_code.json
 # RUN chmod 755 src/csuinf/model.py src/csuinf/utils.py
 # best.pt
 # COPY . . 
@@ -32,7 +33,8 @@ ADD https://cloudstor.aarnet.edu.au/plus/s/dojRidMLnrHK8nV/download best.pt
 RUN pip install -e .
 # RUN python setup.py bdist_wheel
 # RUN pip install dist/csuinf-0.1.0-py3-none-any.whl
-RUN python testimports.py
+# RUN python download_model.py
+RUN python setup_model.py
 # RUN pip install flask
 ENTRYPOINT [ "python", "app.py"]
 
