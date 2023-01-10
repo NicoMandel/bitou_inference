@@ -1,0 +1,9 @@
+# files to ignore when copying over
+src/csuinf/model.py
+src/csuinf/utils.py
+best.pt
+
+src/csuinf.egg-info
+
+.vscode/
+**/__pycache__/
