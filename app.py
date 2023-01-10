@@ -4,7 +4,7 @@ import numpy as np
 from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from csuinf.model import Model
-from csuinf.utils import get_colour_decoder, overlay_images, load_image, write_image, extract_new_size, pad_image
+from csuinf.utils import get_colour_decoder, overlay_images, load_image, extract_new_size, pad_image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
@@ -19,8 +19,6 @@ colour_decoder = get_colour_decoder(cdec_path)
 model_f = os.path.join(fdir, 'best.pt')
 model = Model.load_from_checkpoint(model_f)
 model.eval()
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# model.to(device)
 
 # augmentations
 preprocess_params = model.get_preprocessing_parameters()
@@ -72,7 +70,6 @@ def run_inference(filepath : str) -> str:
 			# nx.to(device)
 			y_hat = model(nx)
 			
-
 	labels = model.get_labels(y_hat)
 	l = labels.cpu().numpy().astype(np.int8)
 	mask = colour_decoder(l)
@@ -103,16 +100,11 @@ def upload_image():
 		masked_image_filename = run_inference(url_for('static', filename=filename))
 		# os.remove(filename)
 		#print('upload_image filename: ' + filename)
-		flash('Image successfully uploaded and displayed below')
+		flash('Image {} successfully uploaded:'.format(filename))
 		return render_template('upload.html', filename=masked_image_filename)
 	else:
-		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		flash('Allowed image types are -> {}'.format(ALLOWED_EXTENSIONS))
 		return redirect(request.url)
-
-# @app.route('/display/<filename>')
-# def display_image(filename):
-# 	#print('display_image filename: ' + filename)
-# 	return redirect(url_for('static', filename=filename), code=301)
 
 if __name__ == "__main__":
 	app.debug = True

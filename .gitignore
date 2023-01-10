@@ -1,6 +1,6 @@
 # everything in the /src folder except for __init__.py
 # Files that are downloaded in the docker by default
-/src/csuinf/*
+src/csuinf/*
 !src/csuinf/__init__.py
 best.pt
 

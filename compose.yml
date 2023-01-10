@@ -1,5 +1,5 @@
 services:
-  flask-dev:
+  flask-debug:
     build:
       context: .
       target: dev
@@ -14,3 +14,14 @@ services:
     volumes:
       - .:/app
     entrypoint: ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app", "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000"]
+
+  flask-deploy:
+    build:
+      context: .
+      target: prod
+      dockerfile: Dockerfile
+    image: bitouflask
+    container_name: bitouflask
+    ports: 
+      - "5000:5000"
+    entrypoint: ["python", "app.py"]

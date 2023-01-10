@@ -1,0 +1,7 @@
+# Ignore everything in here
+*
+# Except this file
+!.gitignore
+
+# and the launch.json
+!launch.json

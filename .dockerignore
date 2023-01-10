@@ -1,6 +1,7 @@
 # files to ignore when copying over
-src/csuinf/model.py
-src/csuinf/utils.py
+src/csuinf/*.py
+!src/csuinf/__init__.py
+
 best.pt
 
 src/csuinf.egg-info
