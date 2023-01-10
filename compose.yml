@@ -4,8 +4,8 @@ services:
       context: .
       target: dev
       dockerfile: Dockerfile
-    image: test/pytorchflask
-    container_name: flask-torch-app
+    image: flaskdev
+    container_name: flaskdev
     ports: 
       - "5000:5000"
       - "5678:5678"

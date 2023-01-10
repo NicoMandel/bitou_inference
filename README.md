@@ -58,6 +58,4 @@ A debugging configuration is provided that allows running the model inside a doc
 10. [x] Debugging flask and python [with vscode](https://code.visualstudio.com/docs/python/tutorial-flask)
 11. [x] Displaying an image in flask with python [on Stackoverflow](https://stackoverflow.com/questions/46785507/python-flask-display-image-on-a-html-page)
 12. [ ] Debugging docker and flask inside vscode in [this medium post](https://medium.com/@lassebenninga/how-to-debug-flask-running-in-docker-compose-in-vs-code-ef37f0f516ee)
-
-### Notes
-[ ] Considering to change ownership or mode when [downloading files into a docker container](https://renehernandez.io/snippets/download-files-from-urls/)
+13. [ ] Dockerizing and debugging flask and vscode with docker in [this blog post](https://dev.to/pacheco/dockerize-a-flask-app-and-debug-with-vscode-34i1)
