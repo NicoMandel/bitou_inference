@@ -4,6 +4,8 @@ src/csuinf/*.py
 
 best.pt
 
+tmp/
+
 src/csuinf.egg-info
 
 .vscode/
