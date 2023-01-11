@@ -79,13 +79,20 @@ def run_inference(filepath : str) -> str:
 	out_img.save(url_for('static', filename=img_name))
 	return img_name
 
-
 # Functions that perform display
-@app.route('/')
-def upload_form():
-	return render_template('upload.html')
+# @app.route('/')
+# def upload_form():
+# 	return render_template('upload.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/infer', methods=['POST'])
 def upload_image():
 	if 'file' not in request.files:
 		flash('No file part')
@@ -101,7 +108,8 @@ def upload_image():
 		# os.remove(filename)
 		#print('upload_image filename: ' + filename)
 		flash('Image {} successfully uploaded:'.format(filename))
-		return render_template('upload.html', filename=masked_image_filename)
+		# return render_template('upload.html', filename=masked_image_filename)
+		return render_template('inference.html', name=filename, filename=masked_image_filename)
 	else:
 		flash('Allowed image types are -> {}'.format(ALLOWED_EXTENSIONS))
 		return redirect(request.url)

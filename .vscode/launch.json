@@ -16,7 +16,6 @@
             "name": "Python: Flask current file",
             "type": "python",
             "request": "launch",
-            "preLaunchTask": "debugpy",
             "module": "flask",
             "env": {
                 "FLASK_APP": "${file}",
