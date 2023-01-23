@@ -66,8 +66,6 @@ def run_inference(filepath : str) -> str:
 			y_hat = model(x)
 		except RuntimeError as e:
 			nx = rescale_image(x, e)
-			img = rescale_image(img, e)
-			# nx.to(device)
 			y_hat = model(nx)
 			
 	labels = model.get_labels(y_hat)
