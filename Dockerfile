@@ -19,8 +19,8 @@ RUN pip install -e .
 RUN python setup_model.py
 ENTRYPOINT [ "python", "app.py"]
 
-FROM base as dev
-RUN pip install -e .
+FROM prod as dev
+# RUN pip install -e .
 RUN pip install debugpy
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
