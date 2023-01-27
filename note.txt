@@ -1,4 +1,13 @@
-# download the required files
+# setup a conda env with python 3.8
+conda create -n hawkweed_inference python=3.8.0
+conda activate hawkweed_inference
+
+# check using env binaries
+python --version
+which pip
+pip install -r requirements.txt 
+
+# download the required data files to setup the repo
 
 # save to ./src/csuinf/
 wget https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/utils.py .
@@ -11,3 +20,9 @@ wget https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/cs
 wget  https://cloudstor.aarnet.edu.au/plus/s/dojRidMLnrHK8nV/download best.pt
 # downloaded as 'download' so rename
 mv download best.pt
+
+# run the app
+python app.py
+
+# navigate too (note I change the port from 5000 to 5001 in app.py
+http://127.0.0.1:5001/infer
