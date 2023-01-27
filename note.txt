@@ -1,0 +1,13 @@
+# download the required files
+
+# save to ./src/csuinf/
+wget https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/utils.py .
+wget https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/src/csupl/model.py .
+
+# save to ./config/
+20043  wget https://raw.githubusercontent.com/NicoMandel/bitou_segmentation/main/config/colour_code.json
+
+# save to ./
+wget  https://cloudstor.aarnet.edu.au/plus/s/dojRidMLnrHK8nV/download best.pt
+# downloaded as 'download' so rename
+mv download best.pt
