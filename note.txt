@@ -1,3 +1,21 @@
+# Docker
+docker image build -t bitouflask .
+docker run -p 5000:5000 bitouflask
+
+# navigate to http://172.17.0.2:5000/
+
+## other docker commands ##
+# see what images are running/installed
+docker ps -a
+
+# delete
+docker rm HASH
+
+# stop
+docker stop HASH
+
+
+
 # setup a conda env with python 3.8
 conda create -n hawkweed_inference python=3.8.0
 conda activate hawkweed_inference
