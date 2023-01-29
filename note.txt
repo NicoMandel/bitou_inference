@@ -15,7 +15,6 @@ docker rm HASH
 docker stop HASH
 
 
-
 # setup a conda env with python 3.8
 conda create -n hawkweed_inference python=3.8.0
 conda activate hawkweed_inference
