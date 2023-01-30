@@ -1,4 +1,5 @@
 import os.path
+import os
 import torch
 import numpy as np
 from flask import Flask, flash, request, redirect, url_for, render_template
@@ -8,6 +9,7 @@ from csuinf.utils import get_colour_decoder, overlay_images, load_image, extract
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
+from datetime import datetime
 
 ## MODEL ##
 fdir = os.path.abspath(os.path.dirname(__file__))
@@ -33,7 +35,9 @@ augmentations = A.Compose([
 ## END MODEL ##
 
 # Setting up Flask
-UPLOAD_FOLDER = os.path.join(fdir, 'images')
+today = datetime.now()
+UPLOAD_FOLDER = os.path.join(fdir, 'images',today.strftime('%Y%m%d%H%M%S'))
+os.mkdir(UPLOAD_FOLDER)
 app = Flask(__name__, static_url_path=UPLOAD_FOLDER, static_folder=UPLOAD_FOLDER)
 app.secret_key = "secret_key"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -118,7 +122,7 @@ def upload_image():
         filename=file_list[0].filename
         masked_image_filename=processed_files[0]
         # need to change logic here to display thumbnames
-        return render_template('inference.html', name=filename, filename=masked_image_filename)
+        return render_template('inference.html', name=UPLOAD_FOLDER, filename=masked_image_filename)
     else:
         flash('Allowed image types are -> {}'.format(ALLOWED_EXTENSIONS))
         return redirect(request.url)

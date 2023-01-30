@@ -3,13 +3,8 @@
 {% block content %}
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <p class="lead">File uploaded successfully. You have uploaded an image of</p>
-    <h1 class="display-4">{{name}}!</h1>
-    {% if filename %}
-	<div>
-		<img src="{{ (url_for('static', filename=filename)) }}">
-	</div>
-    {% endif %}    
+    <p class="lead">Image processing successfully! </p>
+    <p class="lead">Please check {{ name }} for results (files end in "mask.jpg") </p>
     <p class="mt-5"> <a href="/">Try again</a></p>
 </div>
 
