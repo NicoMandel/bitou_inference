@@ -42,6 +42,10 @@ A debugging configuration is provided that allows running the model inside a doc
 5. Open a **private** browser and enter `127.0.0.1:5000` and follow the desired commands
 6. vscode should stop at the breakpoint
 
+# Issues  
+- Upload folder is created on app startup but is not updated every time the user uploads new files (could drop Hour Second etc part of dirname
+- Would be good if a processing page was included rather than a pause after the form is submitted
+- as above it is really missing a page that happens before the long running processing job
 
 ## Tutorials and helpful resources
 1. [x] This basic one from the pytorch development team, [on their website](https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html)
