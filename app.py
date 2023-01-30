@@ -98,16 +98,10 @@ def about():
 
 @app.route('/infer', methods=['POST'])
 def upload_image():
-    #if 'file' not in request.files:
-    #    flash('No file part')
-    #    return redirect(request.url)
     print("called POST")
     file = request.files['file']
     file_list = request.files.getlist('file')
     print(file_list[0].filename)
-    #if file.filename == '':
-    #    flash('No image selected for uploading')
-    #    return redirect(request.url)
     if len(file_list)>0: #and allowed_file(file.filename):
         processed_files = []
         for file in file_list:
@@ -117,12 +111,10 @@ def upload_image():
             # call to inference
             masked_image_filename = run_inference(url_for('static', filename=filename))
             processed_files.append(masked_image_filename)
-            # os.remove(filename)
-            #print('upload_image filename: ' + filename)
             flash('Image {} successfully uploaded:'.format(filename))
 
             # return render_template('upload.html', filename=masked_image_filename)
-        # temp 2 lines
+        # This next part is redundant
         filename=file_list[0].filename
         masked_image_filename=processed_files[0]
         # need to change logic here to display thumbnames
