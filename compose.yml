@@ -20,8 +20,10 @@ services:
       context: .
       target: prod
       dockerfile: Dockerfile
-    image: bitouflask
-    container_name: bitouflask
+    image: geotiff
+    container_name: geotiff
+    volumes:
+      - ./images:/app/images
     ports: 
       - "5000:5000"
     entrypoint: ["python", "app.py"]
