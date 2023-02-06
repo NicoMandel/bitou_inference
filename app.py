@@ -5,7 +5,7 @@ from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from csuinf.model import Model
 from csuinf.utils import get_colour_decoder, overlay_images, extract_new_size, pad_image
-from csuinf.geotiff_utils import is_not_empty, convert_idx
+from csuinf.geotiff_utils import is_not_empty, convert_idx, get_tiff_files, ALLOWED_EXTENSIONS, PROCESSED_PREFIX, JOIN_CHAR
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from tqdm import tqdm
@@ -14,6 +14,7 @@ import rasterio
 from rasterio.windows import Window
 from rasterio.plot import reshape_as_image, reshape_as_raster
 
+# Filenames
 fdir = os.path.abspath(os.path.dirname(__file__))
 
 # Colour decoder
@@ -24,6 +25,8 @@ colour_decoder = get_colour_decoder(cdec_path)
 model_f = os.path.join(fdir, 'best.pt')
 model = Model.load_from_checkpoint(model_f)
 model.eval()
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
 
 # augmentations
 window_height = window_width = 512
@@ -41,14 +44,7 @@ app = Flask(__name__, static_url_path=UPLOAD_FOLDER, static_folder=UPLOAD_FOLDER
 app.secret_key = "secret_key"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # app.config["MAX_CONTENT_LENGTH"] = 10 * 16 * 1024 * 1024
-
-# File extensions check
-ALLOWED_EXTENSIONS = set(['tif', 'tiff', 'geotif', 'geotiff'])
-
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 	
-
 # Functions to perform inference
 def rescale_image(img : torch.Tensor, msg: str) -> torch.Tensor:
     """
@@ -64,10 +60,11 @@ def run_inference(filepath : str) -> str:
 		Gets a filepath
 		Returns a filepath to the overlaid image
 	"""
-	outf_name = os.path.basename(filepath)
-	outdir = os.path.dirname(filepath)
-	outf = os.path.join(outdir, "_".join(["DNN", outf_name]))
-	with rasterio.open(filepath, 'r') as src, rasterio.open(outf_name, 'w', **src.meta) as dst:
+	# Use url_for('static', filename) here
+	inf_name = os.path.basename(filepath)
+	outf_name = JOIN_CHAR.join([PROCESSED_PREFIX, inf_name])
+	outf = url_for('static', filename = outf_name)
+	with rasterio.open(filepath, 'r') as src, rasterio.open(outf, 'w', **src.meta) as dst:
 		cols = src.width // window_width
 		rows = src.height // window_height
 		
@@ -78,7 +75,7 @@ def run_inference(filepath : str) -> str:
 			blck = src.read(window = w)
 			if is_not_empty(blck):
 				img = reshape_as_image(blck)
-				x = augmentations(image = img)['image'].unsqueeze(dim=0)
+				x = augmentations(image = img)['image'].unsqueeze(dim=0).to(device)
 				with torch.no_grad():
 					y_hat = model(x)
 				labels = model.get_labels(y_hat)
@@ -95,32 +92,28 @@ def run_inference(filepath : str) -> str:
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', directory = app.static_folder)
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-@app.route('/infer', methods=['POST'])
+@app.route('/infer')
 def upload_image():
-	if 'file' not in request.files:
-		flash('No file part')
+	static_folder = app.static_folder
+	gt_files = get_tiff_files(static_folder)
+	if not gt_files:
+		flash("No files in directory")
 		return redirect(request.url)
-	file = request.files['file']
-	if file.filename == '':
-		flash('No image selected for uploading')
-		return redirect(request.url)
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		# TODO: change here. Since it is a volume binding, it will not be required to save the input file
-		masked_image_filename = run_inference(filepath=filename)
-		flash('Image {} successfully uploaded:'.format(masked_image_filename))
-		# return render_template('upload.html', filename=masked_image_filename)
-		# TODO: save the output file and display the location where it ended up in "filename"
-		return render_template('inference.html', name=masked_image_filename)
 	else:
-		flash('Allowed image types are -> {}'.format(ALLOWED_EXTENSIONS))
-		return redirect(request.url)
+		out_l = []
+		for gt_fname in gt_files:
+			gt_f = gt_fname.parts[-1]
+			gt = url_for('static', filename=gt_f)
+			outf_name = run_inference(gt)
+			out_l.append(outf_name)
+		return render_template('inference.html', names=out_l)
+
 
 if __name__ == "__main__":
 	app.debug = True

@@ -3,8 +3,16 @@
 {% block content %}
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <p class="lead">File segmented successfully. The final file can be found in: </p>
-    <h1 class="display-4">{{name}}!</h1>
+    {% if names %}
+    <p class="lead">File segmented successfully. The final files can be found in: </p>
+    <ol>
+    {% for name in names %}
+        <li>{{ name }}</li>
+    {% endfor %}
+    </ol>
+    {%else %}
+    <p class="lead">No Files found. Make sure they are in the right folder </p>
+    {% endif %}
     <p class="mt-5"> <a href="/">Try again</a></p>
 </div>
 
