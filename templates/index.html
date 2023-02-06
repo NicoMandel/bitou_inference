@@ -24,8 +24,11 @@
         </div> -->
         <div class="input-group-append">
           <input type="submit" value="Search {{directory}} directory"  class="btn btn-outline-secondary" type="button"
-            id="inputGroupFileAddon04" />
+            id="inputGroupFileAddon04", onclick="update()" />
         </div>
+      </div>
+      <div id="Progress_Status">
+        <div id="myprogressBar"></div>
       </div>
     </form>
   </center>
@@ -42,4 +45,19 @@
     </div>
   </div>
 </div>
+<script>
+  function update() {
+      var element = document.getElementById("myprogressBar");   
+      var width = 1;
+      var identity = setInterval(scene, 10);
+      function scene() {
+      if (width >= 100) {
+          clearInterval(identity);
+      } else {
+          width++; 
+          element.style.width = width + '%'; 
+          }
+      }
+  }
+  </script>
 {% endblock %}
