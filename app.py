@@ -1,4 +1,6 @@
-import os.path
+# import os.path
+import os
+from pathlib import Path
 import torch
 import numpy as np
 from flask import Flask, flash, request, redirect, url_for, render_template
@@ -40,6 +42,7 @@ augmentations = A.Compose([
 
 # Setting up Flask
 UPLOAD_FOLDER = os.path.join(fdir, 'images')
+# UPLOAD_FOLDER = os.path.join("/app", "images")
 app = Flask(__name__, static_url_path=UPLOAD_FOLDER, static_folder=UPLOAD_FOLDER)
 app.secret_key = "secret_key"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -54,6 +57,21 @@ def rescale_image(img : torch.Tensor, msg: str) -> torch.Tensor:
     nimg = pad_image(img, nshape)
     return nimg
 
+def test_paths():
+	print("File path is: {}".format(__file__))
+	print("cwd is: {}".format(os.getcwd()))
+	print("Static folder is: {}".format(app.static_folder))
+	print("Static url path is: {}".format(app.static_url_path))
+	print("File real path is: {}".format(os.path.realpath(__file__)))
+
+	print(80*"=")
+	print("Pathlib Versions: ")
+	print("File path is: {}".format(Path(__file__)))
+	print("cwd is: {}".format(Path(os.getcwd())))
+	print("Static folder is: {}".format(Path(app.static_folder)))
+	print("Static url path is: {}".format(Path(app.static_url_path)))
+	print("File real path is: {}".format(Path(os.path.realpath(__file__))))
+
 def run_inference(filepath : str) -> str:
 	"""
 		Function to run the actual inference.
@@ -64,35 +82,35 @@ def run_inference(filepath : str) -> str:
 	inf_name = os.path.basename(filepath)
 	outf_name = JOIN_CHAR.join([PROCESSED_PREFIX, inf_name])
 	outf = url_for('static', filename = outf_name)
-	with rasterio.open(filepath, 'r') as src, rasterio.open(outf, 'w', **src.meta) as dst:
-		cols = src.width // window_width
-		rows = src.height // window_height
-		
-		tot_imgs = cols * rows
-		for i in tqdm(range(tot_imgs)):
-			start_x, start_y = convert_idx(window_width, window_height, cols, i)
-			w = Window(start_y, start_x, window_width, window_height)
-			blck = src.read(window = w)
-			if is_not_empty(blck):
-				img = reshape_as_image(blck)
-				x = augmentations(image = img)['image'].unsqueeze(dim=0).to(device)
-				with torch.no_grad():
-					y_hat = model(x)
-				labels = model.get_labels(y_hat)
-				l = labels.cpu().numpy().astype(np.int8)
-				mask = colour_decoder(l)
-				overlay = overlay_images(img, mask)
-				overlay = reshape_as_raster(overlay)
-			else:
-				overlay = blck
+	with open(filepath, 'rb') as infpath:
+		with rasterio.open(infpath) as src, rasterio.open(outf, 'w', **src.meta) as dst:
+			cols = src.width // window_width
+			rows = src.height // window_height
 			
-			dst.write(overlay, window = w)
-	
+			tot_imgs = cols * rows
+			for i in tqdm(range(tot_imgs)):
+				start_x, start_y = convert_idx(window_width, window_height, cols, i)
+				w = Window(start_y, start_x, window_width, window_height)
+				blck = src.read(window = w)
+				if is_not_empty(blck):
+					img = reshape_as_image(blck)
+					x = augmentations(image = img)['image'].unsqueeze(dim=0).to(device)
+					with torch.no_grad():
+						y_hat = model(x)
+					labels = model.get_labels(y_hat)
+					l = labels.cpu().numpy().astype(np.int8)
+					mask = colour_decoder(l)
+					overlay = overlay_images(img, mask)
+					overlay = reshape_as_raster(overlay)
+				else:
+					overlay = blck
+				
+				dst.write(overlay, window = w)	
 	return outf_name
 
 @app.route('/')
 def index():
-    return render_template('index.html', directory = app.static_folder)
+	return render_template('index.html', directory = app.static_folder)
 
 @app.route('/about')
 def about():
@@ -101,12 +119,14 @@ def about():
 @app.route('/infer')
 def upload_image():
 	static_folder = app.static_folder
+	test_paths()
 	gt_files = get_tiff_files(static_folder)
 	if not gt_files:
 		flash("No files in directory")
 		return redirect(request.url)
 	else:
 		out_l = []
+		print("File List is: {}".format(gt_files))
 		for gt_fname in gt_files:
 			gt_f = gt_fname.parts[-1]
 			gt = url_for('static', filename=gt_f)

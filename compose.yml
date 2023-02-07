@@ -15,15 +15,17 @@ services:
       - .:/app
     entrypoint: ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "app", "--wait-for-client", "--multiprocess", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "5000"]
 
-  # flask-deploy:
-  #   build:
-  #     context: .
-  #     target: prod
-  #     dockerfile: Dockerfile
-  #   image: geotiff
-  #   container_name: geotiff
-  #   volumes:
-  #     - ./images:/app/images
-  #   ports: 
-  #     - "5000:5000"
-  #   entrypoint: ["python", "app.py"]
+  geotiff-deploy:
+    build:
+      context: .
+      # target: prod
+      dockerfile: Dockerfile
+    image: geotiff_depl
+    container_name: geotiff_depl
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./images/:/app/images/
+    ports: 
+      - "5000:5000"
+    entrypoint: ["python", "app.py"]
