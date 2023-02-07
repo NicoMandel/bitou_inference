@@ -82,30 +82,30 @@ def run_inference(filepath : str) -> str:
 	inf_name = os.path.basename(filepath)
 	outf_name = JOIN_CHAR.join([PROCESSED_PREFIX, inf_name])
 	outf = url_for('static', filename = outf_name)
-	with open(filepath, 'rb') as infpath:
-		with rasterio.open(infpath) as src, rasterio.open(outf, 'w', **src.meta) as dst:
-			cols = src.width // window_width
-			rows = src.height // window_height
+	# with open(filepath, 'rb') as infpath:
+	with rasterio.open(filepath, 'r') as src, rasterio.open(outf, 'w', **src.meta) as dst:
+		cols = src.width // window_width
+		rows = src.height // window_height
+		
+		tot_imgs = cols * rows
+		for i in tqdm(range(tot_imgs)):
+			start_x, start_y = convert_idx(window_width, window_height, cols, i)
+			w = Window(start_y, start_x, window_width, window_height)
+			blck = src.read(window = w)
+			if is_not_empty(blck):
+				img = reshape_as_image(blck)
+				x = augmentations(image = img)['image'].unsqueeze(dim=0).to(device)
+				with torch.no_grad():
+					y_hat = model(x)
+				labels = model.get_labels(y_hat)
+				l = labels.cpu().numpy().astype(np.int8)
+				mask = colour_decoder(l)
+				overlay = overlay_images(img, mask)
+				overlay = reshape_as_raster(overlay)
+			else:
+				overlay = blck
 			
-			tot_imgs = cols * rows
-			for i in tqdm(range(tot_imgs)):
-				start_x, start_y = convert_idx(window_width, window_height, cols, i)
-				w = Window(start_y, start_x, window_width, window_height)
-				blck = src.read(window = w)
-				if is_not_empty(blck):
-					img = reshape_as_image(blck)
-					x = augmentations(image = img)['image'].unsqueeze(dim=0).to(device)
-					with torch.no_grad():
-						y_hat = model(x)
-					labels = model.get_labels(y_hat)
-					l = labels.cpu().numpy().astype(np.int8)
-					mask = colour_decoder(l)
-					overlay = overlay_images(img, mask)
-					overlay = reshape_as_raster(overlay)
-				else:
-					overlay = blck
-				
-				dst.write(overlay, window = w)	
+			dst.write(overlay, window = w)	
 	return outf_name
 
 @app.route('/')
