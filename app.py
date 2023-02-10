@@ -19,6 +19,8 @@ colour_decoder = get_colour_decoder(cdec_path)
 model_f = os.path.join(fdir, 'best.pt')
 model = Model.load_from_checkpoint(model_f)
 model.eval()
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
 
 # augmentations
 preprocess_params = model.get_preprocessing_parameters()
@@ -60,7 +62,7 @@ def run_inference(filepath : str) -> str:
 	"""
 	img = load_image(filepath)
 	x = img.copy()
-	x = augmentations(image=x)['image'].unsqueeze(dim=0)
+	x = augmentations(image=x)['image'].unsqueeze(dim=0).to(device)
 	with torch.no_grad():
 		try:
 			y_hat = model(x)
@@ -69,7 +71,7 @@ def run_inference(filepath : str) -> str:
 			y_hat = model(nx)
 			
 	labels = model.get_labels(y_hat)
-	l = labels.cpu().numpy().astype(np.int8)
+	l = labels.detach().cpu().numpy().astype(np.int8)
 	mask = colour_decoder(l)
 	overlay = overlay_images(img, mask)
 	img_name = "mask.jpg"
