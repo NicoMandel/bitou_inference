@@ -25,3 +25,13 @@ services:
     ports: 
       - "5000:5000"
     entrypoint: ["python", "app.py"]
+  
+  flask-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile_GPU
+    image: bitou_gpu
+    container_name: bitou_gpu
+    ports:
+      - "5000:5000"
+    entrypoint: ["python", "app.py"]
